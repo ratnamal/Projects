@@ -15,6 +15,7 @@ import pickle
 import sys
 from __future__ import division
 
+#LDA
 def ldaLearn(X,y):
     # Inputs
     # X - a N x d matrix with each row corresponding to a training example
@@ -39,6 +40,7 @@ def ldaLearn(X,y):
     covmat = np.cov(X.T)
     return means,covmat
 
+#QDA
 def qdaLearn(X,y):
     # Inputs
     # X - a N x d matrix with each row corresponding to a training example
@@ -81,6 +83,7 @@ def qdaLearn(X,y):
     covmats.append(np.cov(np.asarray(X5).T))
     return means,covmats
 
+#Testing LDA
 def ldaTest(means,covmat,Xtest,ytest):
     # Inputs
     # means, covmat - parameters of the LDA model
@@ -113,6 +116,7 @@ def ldaTest(means,covmat,Xtest,ytest):
     acc = cnt/len(ytest)
     return acc,ypred
 
+#Testing QDA
 def qdaTest(means,covmats,Xtest,ytest):
     # Inputs
     # means, covmats - parameters of the QDA model
@@ -145,6 +149,7 @@ def qdaTest(means,covmats,Xtest,ytest):
     acc = cnt/len(ytest)
     return acc,ypred
 
+#Linear regression
 def learnOLERegression(X,y):
     # Inputs:                                                         
     # X = N x d 
@@ -157,6 +162,7 @@ def learnOLERegression(X,y):
     w = np.dot(np.dot(np.linalg.inv(np.dot(X.T,X)),X.T),y) 
     return w
 
+#Ridge regression
 def learnRidgeRegression(X,y,lambd):
     # Inputs:
     # X = N x d                                                               
@@ -172,6 +178,7 @@ def learnRidgeRegression(X,y,lambd):
     w = np.dot(np.dot(res,X.T),y)
     return w
 
+#To calculate Mean Squared Error
 def testOLERegression(w,Xtest,ytest):
     # Inputs:
     # w = d x 1
@@ -185,6 +192,7 @@ def testOLERegression(w,Xtest,ytest):
     mse = (np.sum(np.subtract(ytest,np.dot(Xtest,w))**2))/Xtest.shape[0]
     return mse
 
+#Using Gradient Descent for Ridge Regression Learning
 def regressionObjVal(w, X, y, lambd):
 
     # compute squared error (scalar) and gradient of squared error with respect
@@ -208,6 +216,7 @@ def regressionObjVal(w, X, y, lambd):
     error_grad = np.squeeze(np.array(error_grad))
     return error, error_grad
 
+#Non-Linear Regression
 def mapNonLinear(x,p):
     # Inputs:                                                                  
     # x - a single column vector (N x 1)                                       
