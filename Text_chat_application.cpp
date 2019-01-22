@@ -1,7 +1,5 @@
 /**
- * @ratnamal_assignment1
  * @author  Ratnamala Korlepara <ratnamal@buffalo.edu>
- * @version 1.0
  * 
  * Text chat application where clients communicate with each other using one server
  * Functions for Client:
