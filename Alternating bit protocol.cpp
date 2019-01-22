@@ -11,8 +11,8 @@ using namespace std;
 /* ******************************************************************
  ALTERNATING BIT NETWORK EMULATOR:
 
-   This code should be used for PA2, unidirectional data transfer 
-   protocols (from A to B). Network properties:
+   This code shows unidirectional data transfer protocols (from A to B).
+   Network properties:
    - one way network delay averages five time units (longer if there
      are other messages in the channel for GBN), but can be larger
    - packets can be corrupted (either the header or the data portion)
