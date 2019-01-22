@@ -8,10 +8,10 @@
 using namespace std;
 
 /* ******************************************************************
- ALTERNATING BIT AND GO-BACK-N NETWORK EMULATOR: VERSION 1.1  J.F.Kurose
+ SELECTIVE REPEAT NETWORK EMULATOR:
 
-   This code should be used for PA2, unidirectional data transfer 
-   protocols (from A to B). Network properties:
+   This code shows unidirectional data transfer protocols (from A to B). 
+   Network properties:
    - one way network delay averages five time units (longer if there
      are other messages in the channel for GBN), but can be larger
    - packets can be corrupted (either the header or the data portion)
@@ -19,8 +19,6 @@ using namespace std;
    - packets will be delivered in the order in which they were sent
      (although some can be lost).
 **********************************************************************/
-
-/********* STUDENTS WRITE THE NEXT SEVEN ROUTINES *********/
 
 struct pkt_list
 {
