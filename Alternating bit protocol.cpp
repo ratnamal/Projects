@@ -9,7 +9,7 @@
 using namespace std;
 
 /* ******************************************************************
- ALTERNATING BIT AND GO-BACK-N NETWORK EMULATOR: VERSION 1.1  J.F.Kurose
+ ALTERNATING BIT NETWORK EMULATOR:
 
    This code should be used for PA2, unidirectional data transfer 
    protocols (from A to B). Network properties:
@@ -20,8 +20,6 @@ using namespace std;
    - packets will be delivered in the order in which they were sent
      (although some can be lost).
 **********************************************************************/
-
-/********* STUDENTS WRITE THE NEXT SEVEN ROUTINES *********/
 
 struct pkt_list
 {
