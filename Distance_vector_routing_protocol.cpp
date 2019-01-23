@@ -1,24 +1,6 @@
 /**
- * @ratnamal_assignment3
  * @author  Ratnamala Korlepara <ratnamal@buffalo.edu>
- * @version 1.0
- *
- * @section LICENSE
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * General Public License for more details at
- * http://www.gnu.org/copyleft/gpl.html
- *
- * @section DESCRIPTION
- *
- * This contains the main function. Add further description here....
+ * 
  */
 
 /**
@@ -355,12 +337,15 @@ void author_response(int sock_index)
 int neighbour[5],n=0,neighbour_id[5],neighbour_ip[5],src_id,port,interval=2000000000,prev_time=0;
 uint32_t src_ip;
 
+/* 
+ * Contains the data required to initialize a router. It lists the number of routers in the network, their IP address, router and 
+ * data port numbers, and, the initial costs of the links to all routers. It also contains the periodic interval (in seconds) for 
+ * the routing updates to be broadcast to all neighbors (routers directly connected).
+*/
 void init(int sock_index, char *cntrl_payload)
 {
 	int i;
 	struct links l;
-	
-		cout<<"INIT"<<endl;
 	ip = (struct init_payload *) cntrl_payload;
 	interval = ntohs(ip->interval);
 	
@@ -442,23 +427,19 @@ void init(int sock_index, char *cntrl_payload)
 	cout<<"end of init"<<endl;
 }
 
+/* 
+ * The controller uses this to request the current routing/forwarding table from a given router. The table sent as a response 
+ * should contain an entry for each router in the network (including self) consisting of the next hop router ID (on the least cost 
+ * path to that router) and the cost of the path to it.
+ */
 void rtable(int sock_index)
 {
 	//send the response
 
 	int k=0;
-	cout<<"rtable"<<endl;
 	unsigned char *resp;
 	resp = (unsigned char*)malloc(sizeof(rout_table) * 5 * sizeof(char));
 	memset(resp,'0', sizeof(rout_table) * sizeof(char) * 5);
-	
-	for(it1=l_list.begin();it1!=l_list.end();it1++)
-	{
-		cout<<it1->router_id2<<endl;
-		cout<<it1->nexthop<<endl;
-		cout<<it1->cost<<endl;
-	}
-	
 	
 	for(it1=l_list.begin();it1!=l_list.end();it1++)
 	{
@@ -475,10 +456,6 @@ void rtable(int sock_index)
 	for(int i=0;i<sizeof(rout_table)*5;i++)
 		printf("%02X ",resp[i]);
 	 cout<<endl;
-	for(int i=0;i<k;i++)
-	{
-		cout<<rt1[i].router_id<<"\t"<<rt1[i].padding<<"\t"<<rt1[i].nexthop_id<<"\t"<<rt1[i].cost<<endl;
-	}
 	
 	uint16_t payload_len, response_len;
 	char *cntrl_response_header, *cntrl_response_payload, *cntrl_response;
@@ -506,6 +483,9 @@ void rtable(int sock_index)
 	free(cntrl_response);
 }
 
+/*
+ * The controller uses this to change/update the link cost between between the router receiving this message and a neighboring router.
+*/
 void update(int sock_index,char *cntrl_payload)
 {
 	int i;
@@ -518,14 +498,6 @@ void update(int sock_index,char *cntrl_payload)
 			break;
 		}
 	}
-	
-	for(it1=l_list.begin();it1!=l_list.end();it1++)
-	{
-		cout<<it1->router_id2<<endl;
-		cout<<it1->nexthop<<"\t";
-		cout<<it1->cost<<endl;
-	}			
-	
 	
 	uint16_t payload_len, response_len;
 	char *cntrl_response_header, *cntrl_response_payload, *cntrl_response;
@@ -546,6 +518,10 @@ void update(int sock_index,char *cntrl_payload)
 	
 }
 
+/*
+ * The controller uses this to simulate a crash (unexpected failure) on a router. On receiving this message, the router 
+ * should exit immediately.
+*/
 void crash(int sock_index)
 {
 	uint16_t payload_len, response_len;
@@ -652,60 +628,60 @@ void main_loop()
     while(TRUE){
         watch_list = master_list;
 		
-		gettimeofday(&begin,NULL);
-		tv.tv_sec = (interval + prev_time) - begin.tv_sec;
-		tv.tv_usec = 0;
+	gettimeofday(&begin,NULL);
+	tv.tv_sec = (interval + prev_time) - begin.tv_sec;
+	tv.tv_usec = 0;
 			
         selret = select(head_fd+1, &watch_list, NULL, NULL, &tv);
 		
         if(selret < 0)
             ERROR("select failed.");
 		
-		if(selret == 0)
-		{
-			//then send routing update to neighbours
-			int k=0;
-			unsigned char *routup;
-			r = (struct rout*)malloc(sizeof(struct rout));
+	if(selret == 0)
+	{
+		//then send routing update to neighbours
+		int k=0;
+		unsigned char *routup;
+		r = (struct rout*)malloc(sizeof(struct rout));
 					
-			memset(r,'\0',sizeof(rout));
-			routup = (unsigned char*)malloc(sizeof(rout) * sizeof(char));
-			memset(routup, '0', sizeof(rout) * sizeof(char));
+		memset(r,'\0',sizeof(rout));
+		routup = (unsigned char*)malloc(sizeof(rout) * sizeof(char));
+		memset(routup, '0', sizeof(rout) * sizeof(char));
 					
-			r->no_of_upt = l_list.size();					
-			r->src_port = port;
-			r->src_router_ip = src_ip;
+		r->no_of_upt = l_list.size();					
+		r->src_port = port;
+		r->src_router_ip = src_ip;
 				
-			for(it1=l_list.begin();it1!=l_list.end();it1++)
-			{
-				r->r1[k].router_ip = it1->ip_addr;
-				r->r1[k].router_port = it1->router_port;
-				r->r1[k].padding = 0;
-				r->r1[k].router_id = it1->router_id2;
-				r->r1[k].cost = it1->cost;
-				k++;
-			}
-			
-			memcpy(routup,(const unsigned char*)r,sizeof(rout));
-			
-			struct sockaddr_in control_addr;
-			socklen_t addrlen = sizeof(control_addr);
-					
-			for(int i=0;i<n;i++)
-			{					
-				control_addr.sin_family = AF_INET;
-				control_addr.sin_addr.s_addr = htonl(neighbour_ip[i]);
-				control_addr.sin_port = htons(neighbour[i]);
-					
-				int snd = sendto(router_socket, routup, sizeof(rout), 0,(struct sockaddr *)&control_addr, sizeof(control_addr));
-			}		
-			free(r);
-			free(routup);
-			r = NULL;
-			routup = NULL;
-			gettimeofday(&begin,NULL);
-			prev_time = begin.tv_sec;
+		for(it1=l_list.begin();it1!=l_list.end();it1++)
+		{
+			r->r1[k].router_ip = it1->ip_addr;
+			r->r1[k].router_port = it1->router_port;
+			r->r1[k].padding = 0;
+			r->r1[k].router_id = it1->router_id2;
+			r->r1[k].cost = it1->cost;
+			k++;
 		}
+			
+		memcpy(routup,(const unsigned char*)r,sizeof(rout));
+			
+		struct sockaddr_in control_addr;
+		socklen_t addrlen = sizeof(control_addr);
+					
+		for(int i=0;i<n;i++)
+		{					
+			control_addr.sin_family = AF_INET;
+			control_addr.sin_addr.s_addr = htonl(neighbour_ip[i]);
+			control_addr.sin_port = htons(neighbour[i]);
+					
+			int snd = sendto(router_socket, routup, sizeof(rout), 0,(struct sockaddr *)&control_addr, sizeof(control_addr));
+		}		
+		free(r);
+		free(routup);
+		r = NULL;
+		routup = NULL;
+		gettimeofday(&begin,NULL);
+		prev_time = begin.tv_sec;
+	}
 		
         /* Loop through file descriptors to check which ones are ready */
         for(sock_index=0; sock_index<=head_fd; sock_index+=1){
@@ -724,53 +700,53 @@ void main_loop()
                 /* router_socket */
                 else if(sock_index == router_socket){
 				
-					their_addr_len = sizeof(their_addr);
+			their_addr_len = sizeof(their_addr);
                     //call handler that will call recvfrom() .....
-					if((numbytes = recvfrom(sock_index,buf,sizeof(rout_upt),0,&their_addr,&their_addr_len)) == -1)
-						ERROR("recvfrom");
+			if((numbytes = recvfrom(sock_index,buf,sizeof(rout_upt),0,&their_addr,&their_addr_len)) == -1)
+				ERROR("recvfrom");
 					
-					ru = (struct rout_upt *) buf;
+			ru = (struct rout_upt *) buf;
 	
-					for(it1=l_list.begin();it1!=l_list.end();it1++)
-						if(ru->src_port == it1->router_port)
-							src = it1->router_id2;
+			for(it1=l_list.begin();it1!=l_list.end();it1++)
+				if(ru->src_port == it1->router_port)
+					src = it1->router_id2;
 												
-					//distance vector calc and update forwarding table
-					int sum,initial_cost, cost;
+			//distance vector calc and update forwarding table
+			int sum,initial_cost, cost;
 					
-					for(it1=l_list.begin();it1!=l_list.end();it1++)
+			for(it1=l_list.begin();it1!=l_list.end();it1++)
+			{
+				if(ru->src_port == it1->router_port)
+				{
+					initial_cost = it1->cost;
+					break;
+				}
+			}
+					
+			for(it1=l_list.begin();it1!=l_list.end();it1++)
+			{
+				if(it1->router_id1 == it1->router_id2)
+					continue;
+				if(it1->router_port == ru->src_port)
+				{
+					continue;
+				}
+					
+				for(int i=0;i<ru->no_of_upt;i++)
+				{
+					if(it1->router_port == ru->ru1[i].router_port)
 					{
-						if(ru->src_port == it1->router_port)
-						{
-							initial_cost = it1->cost;
-							break;
-						}
-					}
-					
-					for(it1=l_list.begin();it1!=l_list.end();it1++)
-					{
-						if(it1->router_id1 == it1->router_id2)
-							continue;
-						if(it1->router_port == ru->src_port)
-						{
-							continue;
-						}
-					
-						for(int i=0;i<ru->no_of_upt;i++)
-						{
-							if(it1->router_port == ru->ru1[i].router_port)
-							{
-								cost = ru->ru1[i].cost;
-								break;
-							}
-						}
-						if((cost + initial_cost) < it1->cost)
-						{
-							it1->cost = cost + initial_cost;
-							it1->nexthop = src;
-						}
+						cost = ru->ru1[i].cost;
+						break;
 					}
 				}
+				if((cost + initial_cost) < it1->cost)
+				{
+					it1->cost = cost + initial_cost;
+					it1->nexthop = src;
+				}
+			}
+		}
 
                 /* data_socket */
                 else if(sock_index == data_socket){
