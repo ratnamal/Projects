@@ -1,0 +1,234 @@
+                  ****************TABLE CREATION*****************
+                           
+create table employee(emp_id number(12,3),emp_fname varchar2(20),emp_lname varchar2(20),emp_type varchar2(20),emp_department varchar2(20),emp_contact number(12,2),primary key(emp_id));
+
+create table employee_mail(emp_id number(12,2),email_id_1 varchar2(20),email_id_2 varchar2(20),primary key(emp_id));
+
+create table emp_salary_det(emp_sal_id number(12,2),emp_id number(12,2),basic_pay number(20,10),allowances number(20,10),incentives number(20,10),loan number(20,10),bal_loan number(20,10),date_of_sal date,no_of_holidays number(12,2),total_sal number(20,10),primary key(emp_sal_id),foreign key(emp_id)references employee);
+
+
+create table emp_add_det(emp_add_id number(12,2),emp_id number(12,2),city varchar(20),state varchar(10),pincode number(20,10),primary key(emp_add_id),foreign key(emp_id)references employee);
+
+create table emp_add(emp_add_id number(12,2),add_line_1 varchar(20),add_line_2 varchar(20),primary key(emp_add_id));
+
+create table employee_details(emp_per_id number(12,2),phone_no number(20,10),primary key(emp_per_id));
+
+create table employee_personal_details(emp_per_id number(12,2),emp_id number(12,2),emp_dob date,emp_qualification varchar(20),emp_hire_date date,primary key(emp_per_id),foreign key(emp_id)references employee);
+
+
+create table customers(customer_id number(12,2),cust_fname varchar(20),cust_lname varchar(20),primary key(customer_id));
+create table cust_mail(customer_id number(12,2),email_id_1 varchar(30),email_id_2 varchar(30),primary key(customer_id));
+create table cust_contact(customer_id number(12,2),ph_no number(20,10),primary key(customer_id)); 
+
+
+
+create table vehicle_tracker(model_no number(20,10),vehicle_no number(20,10),no_of_vehicles number(12,2),delivered_date date,vehicle_name varchar2(20),container_id number(20,10),primary key(model_no));
+
+
+create table vehicle(chasis_no number(12,2),model_no number(20,10),vehicle_name varchar2(20),vehicle_type varchar2(30),color varchar2(20),price number(30,15),engine_no number(20,10),booking_status varchar2(30),primary key(chasis_no) ,foreign key(model_no)references vehicle_tracker);
+
+create table customer_addr(customer_id number(12,2),addr_line_1 varchar(20),addr_line_2 varchar(20),city varchar(20),state varchar(20),pincode number(12,2),foreign key(customer_id)references customers);
+
+
+create table spares(spare_part_id number(12,2),spare_part_name varchar(30),spare_part_color varchar(30),sp_price number(20,10),in_stock number(20,10),primary key(spare_part_id));
+
+create table service(service_id number(12,2),ser_type varchar(20),ser_charge number(12,2),hourly_rate number(12,2),primary key(service_id));
+
+
+create table service_ticket(service_ticket_id number(20,10),service_no number(20,10),vehicle_no_pl number(20,10),vehicle_name varchar(30),recieved_date date,delivered_date date,customer_id number(20,10),emp_id number(20,10),primary key(service_ticket_id),foreign key(emp_id)references employee,foreign key(customer_id)references customers);
+
+create table ser_sales(ser_inv_no number(12,2),inv_date date,service_ticket_no number(12,2),service_id number(12,2),spare_part_id number(12,2),total number(12,2),primary key(ser_inv_no),foreign key(spare_part_id)references spares,foreign key(service_id)references service);
+
+
+
+create table vehicle_offer(offer_id number(12,2),offer_name varchar(20),model_no number(12,2),offer_description varchar(20),offer_st_date date,offer_end_date date,primary key(offer_id),foreign key(model_no)references vehicle_tracker);
+
+create table insurance_companies(ins_comp_id number(12,2),ins_comp_name varchar(20),policy_name varchar(20),description varchar(20),primary key(ins_comp_id));
+
+create table vehicle_description(feature_id number(12,2),feature_type varchar(20),model_no number(12,2),battery number(12,2),mileage number(12,2),primary key(feature_id),foreign key(model_no)references vehicle_tracker);
+drop table vehicle_description;
+
+create table sales_inv(inv_id number(12,2),inv_date date,chasis_no number(12,2),customer_id number(12,2),emp_id number(12,2),total_amt number(12,2),primary key(inv_id),foreign key(chasis_no)references vehicle,foreign key(customer_id)references customers);
+
+
+create table insurance_policy(policy_id number(12,2),inv_id number(12,2),ins_comp_id number(12,2),policy_st_date date,policy_end_date date,monthly_payments number(12,2),description varchar(20),primary key(policy_id),foreign key(inv_id)references sales_inv);
+
+                      **********************INSERTION******************
+
+
+insert into employee values('1','Karen','Brewer','working','marketing','9874561231');
+insert into employee values('2','Sam','Welsh','studying','sales','9657841231');
+insert into employee values('3','Charlie','Weasley','working','officer','9874561235');
+insert into employee values('4','Seth','Lautner','working','clerk','7895463214');
+insert into employee values('5','Kristen','Stewart','working','sales','745632189');
+
+
+
+insert into employee_mail values('1','karen@gmail.com','brewer12@yahoo.com');
+insert into employee_mail values('2','sam21@gmail.com','welsh23@gmail.com');
+insert into employee_mail values('3','charls@gmail.com','selae@gmail.com');
+insert into employee_mail values('4','seth@gmail.com','s123@yahoo.com');
+insert into employee_mail values('5','krist@gmail.com','stewart@gmail.com');
+
+
+insert into emp_salary_det values('12','1','250000','5000','500','3000000','300000','3-jun-2014','30','35500');
+insert into emp_salary_det values('23','2','20000','4000','500','2000000','300000','4-aug-2014','30','24500');
+insert into emp_salary_det values('34','3','24000','3000','500','1000000','300000','3-july-2014','30','27500');
+insert into emp_salary_det values('45','4','20000','3500','500','1500000','300000','4-sep-2014','30','24000');
+insert into emp_salary_det values9'56','5','25000','4000','500','1500000','300000','4-dec-2014','30','29500');
+
+
+
+insert into emp_add_det values('111','1','vadavalli','CBE','641041');
+insert into emp_add_det values('222','2','rs puram','trichy','641021');
+insert into emp_add_det values('333','3','koyambedu','chennai','641023');
+insert into emp_add_det values('444','4','thiruvattur','salem','641220');
+insert into emp_add_det values('555','5','valsarvakam','madurai','620541');
+
+
+
+insert into emp_add values('111','nirmala','gardens');
+insert into emp_add values('222','shastra','nagar');
+insert into emp_add values('333','gandhi','park');
+insert into emp_add values('444','anna','salai');
+insert into emp_add values('555','brother','nagar');
+
+
+insert into employee_details values('123','7598253838');
+insert into employee_details values('321','9842253838');
+insert into employee_details values('456','9786653838');
+insert into employee_details values('654','9952220078');
+insert into employee_details values('231','8521459863');
+
+
+insert into employee_personal_details values('1234','1','21-jun-1989','btech','21-july-2012');
+insert into employee_personal_details values('4567','2','13-aug-1985','bcom','11-jan-2010');
+insert into employee_personal_details values('7891','3','12-jun-1988','bsc','15-nov-2014');
+insert into employee_personal_details values('1455','4','13-july-1987','mba','1-jan-2010');
+insert into employee_personal_details values('2376','5','12-jun-1983','bcom','30-may-2011');
+
+        
+
+insert into customers values('1212','Kristy','Thomas');
+insert into customers values('2332','Stace','Mcgill');          
+insert into customers values('4564','Vinay','Pathak');          
+insert into customers values('5674','Karthik','Ganesh');        
+insert into customers values('7898','Gautham','Venkatesh');
+
+
+
+
+insert into cust_mail values('1212','kristy@gmail.com','thomas@gmail.com');
+insert into cust_mail values('2332','stace@gmail.com','mcgill@gmail.com');
+insert into cust_mail values('4564','vinay@gmail.com','pathak@gmail.com');
+insert into cust_mail values('5674','karthik@gmail.com','ganesh@gmail.com');
+insert into cust_mail values('7898','gautham@gmail.com','venkatesh@gmail.com');
+
+
+
+insert into cust_contact values('1212','9874564123');
+insert into cust_contact values('2332','9874561230');
+insert into cust_contact values('4564','9845641230');
+insert into cust_contact values('5674','8745641230');
+insert into cust_contact values('7898','9874641230');
+
+
+
+insert into customer_addr values('1212','gandhipark','rs puram','coimbatore','TN','641021');
+insert into customer_addr values('2332','saf games','koyambedu','chennai','kerela','89624');
+insert into customer_addr values('4564','vadavalli','anna salai','madurai','maharashtra','456321');
+insert into customer_addr values('5674','aluva','allepey','kochin','MP','745621');
+insert into customer_addr values('7898','girija nagar','gurgaon','mumbai','delhi','745896');
+
+
+insert into SPARES values('1212','gear','green','7800','5');
+insert into SPARES values('2323','brakes','brown','4520','3');
+insert into SPARES values('4343','swiper','blue','1020','1');
+insert into SPARES values('3535','clutch','red','3500','9');
+insert into SPARES values('6776','tyre','black','5200','6');
+
+
+insert into SERVICE values('321','cargo','15000','2000');
+insert into SERVICE values('654','loads','14000','1000');
+insert into SERVICE values('457','goods','14500','1400');
+insert into SERVICE values('567','cargo','15000','1000');
+insert into SERVICE values('786','stacks','20000','2000');
+
+
+
+insert into VEHICLE_TRACKER values('12345','6549','10','10-july-2014','abc','11');
+insert into VEHICLE_TRACKER values('54321','5471','5','17-aug-2013','xyz','22');
+insert into VEHICLE_TRACKER values('67891','7421','6','9-feb-2010','pqr','33');
+insert into VEHICLE_TRACKER values('98761','4563','8','24-oct-2012','egh','44');
+insert into VEHICLE_TRACKER values('23678','5412','11','27-mar-2012','wth','55');
+
+
+
+insert into VEHICLE_OFFER values('111','abd','12345','excellent','11-jan-2013','20-nov-2013');
+insert into VEHICLE_OFFER values('222','cbh','54321','good','12-jan-2013','28-may-2013');
+insert into VEHICLE_OFFER values('444','xyz','67891','bad','21-feb-2014','28-sep-2014');
+insert into VEHICLE_OFFER values('555','mno','98761','worst','6-may-2014','4-dec-2014');
+insert into VEHICLE_OFFER values('666','pqr','23678','average','7-nov-2011','4-dec-2011');
+
+
+
+          
+insert into INSURANCE_COMPANIES values('111','ford','abc','A2');
+insert into INSURANCE_COMPANIES values('222','honda','efg','B2');
+insert into INSURANCE_COMPANIES values('333','benz','hij','A1');
+insert into INSURANCE_COMPANIES values('444','maruthi','klm','AA');
+insert into INSURANCE_COMPANIES values('555','hero','stu','AB');
+
+
+
+
+insert into SERVICE_TICKET values('99','9','1','maruthi','12-jan-2014','30-jan-2014','1212','1');
+insert into SERVICE_TICKET values('88','8','2','mercedes','10-feb-2013','24-mar-2013','2332','2');
+insert into SERVICE_TICKET values('77','7','3','ford','23-mar-2014','29-april-2014','4564','3');
+insert into SERVICE_TICKET values('66','6','4','honda','30-may-2013','30-june-2013','5674','4');
+insert into SERVICE_TICKET values('55','5','5','hero','13-aug-2011','14-sep-2011','7898','5');
+
+
+
+
+insert into VEHICLE_DESCRIPTION values('1678','A1','12345','15000','1500');
+insert into VEHICLE_DESCRIPTION values('3467','A2','54321','30000','2300');
+insert into VEHICLE_DESCRIPTION values('6754','AB','67891','45000','2310');
+insert into VEHICLE_DESCRIPTION values('9856','BB','98761','34000','1000');
+insert into VEHICLE_DESCRIPTION values('3579','A3','23678','43000','2600');
+
+
+insert into VEHICLE values('24','12345','abc','cars','black','2500000','123','progress');
+insert into VEHICLE values('34','54321','xyz','truck','white','3000000','457','progress');
+insert into VEHICLE values('45','67891','pqr','cars','maroon','3500000','567','booked');
+insert into VEHICLE values('56','98761','egh','auto','yellow','100000','789','progress');
+insert into VEHICLE values('67','23678','wth','cars','silver','150000','896','booked');
+
+
+
+      
+insert into SER_SALES values('198','12-jan-2013','9','321','1212','5000');
+insert into SER_SALES values('234','13-aug-2012','8','654','2323','3000');
+insert into SER_SALES values('567','12-feb-2012','7','457','4343','1000');
+insert into SER_SALES values('769','30-dec-2011','6','567','3535','3000');
+insert into SER_SALES values('365','25-nov-2014','5','786','6776','5000');
+
+
+
+
+
+
+insert into SALES_INV values('143','12-jan-2013','24','1212','1','2500000');
+insert into SALES_INV values('234','13-aug-2012','34','2332','2','3000000');
+insert into SALES_INV values('356','12-feb-2012','45','4564','3','3500000');
+insert into SALES_INV values('456','30-dec-2011','56','5674','4','100000');
+insert into SALES_INV values('789','25-nov-2014','67','7898','5','150000');
+
+
+
+
+insert into INSURANCE_POLICY values('999','143','5','23-jan-2013','23-jan-2014','25000','A3');
+insert into INSURANCE_POLICY values('888','234','4','11-feb-2011','22-feb-2012','20000','A3');
+insert into INSURANCE_POLICY values('777','356','3','10-may-2013','23-may-2014','10000','A3');
+insert into INSURANCE_POLICY values('666','456','2','5-sep-2013','23-aug-2014','15000','A3');
+insert into INSURANCE_POLICY values('555','789','1','4-mar-2012','3-feb-2013','10000','A3');
