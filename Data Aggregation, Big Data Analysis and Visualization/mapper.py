@@ -1,4 +1,13 @@
 #!/usr/bin/python
+
+## Mapper
+# Splits data into list of words and removes stop words
+#
+## Output:
+# word1 1
+# word2 1
+
+
 import sys
 for data in sys.stdin:
     file=open('/home/hadoop/stopwords.txt','r')
