@@ -3,11 +3,6 @@
 
 # In[ ]:
 
-
-#Ratnamala Korlepara
-#Hima Sujani Adike
-
-
 # In[38]:
 
 
